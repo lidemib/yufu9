@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>渔夫9年餐饮 · 创业避坑工具站</title>
+<meta name="description" content="9年餐饮老兵的工具箱：加盟合同扫描器、开店盈亏计算器、1024+创业失败案例库。不教你赚钱，只帮你少走弯路。">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #14110e;
+  color: #f0e8d5;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+a { color: #d4a040; text-decoration: none; transition: color 0.2s; }
+a:hover { color: #e8b84a; text-decoration: underline; }
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 24px;
+  border-bottom: 1px solid #302418;
+  font-size: 13px;
+  position: sticky;
+  top: 0;
+  background: rgba(20, 17, 14, 0.95);
+  backdrop-filter: blur(10px);
+  z-index: 100;
+}
+.header .logo {
+  color: #f0e8d5;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+}
+.header nav { margin-left: auto; display: flex; gap: 16px; }
+.header nav a { color: #b8a888; font-size: 13px; }
+.header nav a:hover { color: #d4a040; text-decoration: none; }
+
+/* Hero */
+.hero {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 80px 24px 50px;
+  text-align: center;
+}
+.hero-tag {
+  color: #d4a040;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+.hero h1 {
+  font-size: clamp(28px, 5vw, 44px);
+  line-height: 1.15;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #f0e8d5, #d4a040);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  max-width: 580px;
+  margin: 0 auto 12px;
+  color: #b8a888;
+  font-size: 16px;
+  line-height: 1.8;
+}
+.hero .slogan {
+  color: #d4a040;
+  font-size: 15px;
+  font-weight: 600;
+  margin-top: 20px;
+}
+
+/* Tools Grid */
+.tools-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.section-title {
+  font-size: 13px;
+  color: #b8a888;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #302418;
+}
+.tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+.tool-card {
+  background: linear-gradient(145deg, rgba(30, 25, 18, 0.9), rgba(22, 18, 14, 0.95));
+  border: 1px solid #302418;
+  border-radius: 12px;
+  padding: 28px 24px;
+  transition: border-color 0.3s, transform 0.2s;
+  cursor: pointer;
+  display: block;
+}
+.tool-card:hover {
+  border-color: #d4a040;
+  transform: translateY(-2px);
+  text-decoration: none;
+}
+.tool-card .card-icon {
+  font-size: 32px;
+  margin-bottom: 14px;
+  display: block;
+}
+.tool-card h3 {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f0e8d5;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+.tool-card p {
+  color: #b8a888;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.tool-card .card-tag {
+  display: inline-block;
+  font-size: 11px;
+  color: #d4a040;
+  background: rgba(212, 160, 64, 0.12);
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+.tool-card.featured {
+  border-color: rgba(212, 160, 64, 0.4);
+  background: linear-gradient(145deg, rgba(40, 30, 18, 0.95), rgba(28, 22, 14, 0.95));
+}
+.tool-card.featured .card-tag {
+  background: rgba(212, 160, 64, 0.25);
+  font-weight: 600;
+}
+
+/* Stats Bar */
+.stats-bar {
+  max-width: 960px;
+  margin: 0 auto 40px;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  text-align: center;
+}
+.stat-item {
+  padding: 20px 12px;
+  background: rgba(30, 25, 18, 0.6);
+  border: 1px solid #302418;
+  border-radius: 10px;
+}
+.stat-item .num {
+  font-size: 28px;
+  font-weight: 800;
+  color: #d4a040;
+  letter-spacing: -0.02em;
+}
+.stat-item .label {
+  font-size: 12px;
+  color: #b8a888;
+  margin-top: 4px;
+}
+
+/* About */
+.about-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+}
+.about-card {
+  background: rgba(30, 25, 18, 0.6);
+  border: 1px solid #302418;
+  border-radius: 12px;
+  padding: 32px 28px;
+}
+.about-card h2 {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #f0e8d5;
+}
+.about-card p {
+  color: #b8a888;
+  font-size: 15px;
+  line-height: 1.8;
+  margin-bottom: 12px;
+}
+.about-card .highlight {
+  color: #d4a040;
+  font-weight: 600;
+}
+
+/* CTA */
+.cta-section {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 60px;
+  text-align: center;
+}
+.cta-card {
+  background: linear-gradient(145deg, rgba(212, 160, 64, 0.08), rgba(30, 25, 18, 0.8));
+  border: 1px solid rgba(212, 160, 64, 0.3);
+  border-radius: 12px;
+  padding: 40px 28px;
+}
+.cta-card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.cta-card p {
+  color: #b8a888;
+  font-size: 15px;
+  margin-bottom: 20px;
+}
+.cta-btn {
+  display: inline-block;
+  background: #d4a040;
+  color: #14110e;
+  font-weight: 700;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: background 0.2s;
+}
+.cta-btn:hover {
+  background: #e8b84a;
+  text-decoration: none;
+}
+
+/* Signature */
+.signature {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 24px 40px;
+  text-align: center;
+  color: #6b5f4f;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.signature .sig-text {
+  color: #b8a888;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+/* Footer */
+.footer {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  border-top: 1px solid #302418;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #6b5f4f;
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .hero { padding: 50px 20px 30px; }
+  .hero h1 { font-size: 26px; }
+  .tools-grid { grid-template-columns: 1fr; }
+  .stats-bar { grid-template-columns: 1fr; gap: 10px; }
+  .stat-item { padding: 14px 12px; }
+  .header nav { gap: 12px; }
+  .footer { flex-direction: column; gap: 8px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <span class="logo">🐷 渔夫9年餐饮</span>
+  <nav>
+    <a href="cases/">案例库</a>
+    <a href="scanner/">合同扫描</a>
+    <a href="calculator/">盈亏计算</a>
+    <a href="articles/">文章</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-tag">9年餐饮实战 · 工具 & 案例</div>
+  <h1>不教你赚钱<br>只帮你少走弯路</h1>
+  <p>我开了9年餐饮店，见过200多家加盟店倒闭。这里是我所有的工具、案例和经验——免费给你用。</p>
+  <div class="slogan">「我不教你赚钱，我教你不赔钱」</div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="num">1024+</div>
+    <div class="label">创业失败案例</div>
+  </div>
+  <div class="stat-item">
+    <div class="num">41</div>
+    <div class="label">合同风险点</div>
+  </div>
+  <div class="stat-item">
+    <div class="num">9年</div>
+    <div class="label">餐饮实战经验</div>
+  </div>
+</div>
+
+<section class="tools-section">
+  <div class="section-title">工具 & 资源</div>
+  <div class="tools-grid">
+
+    <a href="cases/" class="tool-card featured">
+      <span class="card-icon">💀</span>
+      <h3>创业失败案例库</h3>
+      <p>1024+ 真实倒闭企业档案，515.6亿美元蒸发资本。搜索你关心的行业，看看别人怎么死的，你就知道该怎么活。</p>
+      <span class="card-tag">1024+ 案例 · 免费浏览</span>
+    </a>
+
+    <a href="scanner/" class="tool-card">
+      <span class="card-icon">🔍</span>
+      <h3>加盟合同风险扫描器</h3>
+      <p>上传加盟合同照片或粘贴文本，智能识别41个风险点。8年踩坑加盟商的血泪教训，帮你看出合同里的坑。</p>
+      <span class="card-tag">智能扫描 · 免费使用</span>
+    </a>
+
+    <a href="calculator/" class="tool-card">
+      <span class="card-icon">🧮</span>
+      <h3>开店盈亏计算器</h3>
+      <p>输入租金、人工、客流，一秒算出月利润和回本周期。别凭感觉开店，先看数字怎么说。</p>
+      <span class="card-tag">实时计算 · 风险诊断</span>
+    </a>
+
+    <a href="articles/" class="tool-card">
+      <span class="card-icon">📝</span>
+      <h3>阿迪的餐饮笔记</h3>
+      <p>9年餐饮实战经验，加盟避坑指南，行业观察。每一篇都是真金白银买来的教训。</p>
+      <span class="card-tag">持续更新</span>
+    </a>
+
+  </div>
+</section>
+
+<section class="about-section">
+  <div class="about-card">
+    <h2>关于阿迪</h2>
+    <p>我叫黎卓篪，朋友叫我阿迪。广东顺德人，<span class="highlight">经营两家餐饮店，加盟袁记云饺9年</span>。</p>
+    <p>9年里，我见过太多人满怀希望进来，最后亏得一塌糊涂离场。品牌方说「投资10万月赚5万」，实际上很多人连本都回不来。</p>
+    <p>我做这个站，不是为了教你怎么赚钱——<span class="highlight">餐饮这个行业，从来都不是轻松赚钱的行业</span>。我是想帮你在花掉几十万之前，先看清楚这个生意到底怎么回事。</p>
+    <p>工具免费用，案例免费看。如果觉得有用，关注我的公众号就行。</p>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="cta-card">
+    <h2>关注公众号「渔夫9年餐饮」</h2>
+    <p>每周更新餐饮加盟避坑干货，真实案例拆解，行业热点分析。<br>比你身边任何一个「过来人」都实在。</p>
+    <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkwNTI3MjE0Mw==" class="cta-btn">关注公众号</a>
+  </div>
+</section>
+
+<div class="signature">
+  <div class="sig-text">我是阿迪，经营着两家餐饮店，9年加盟<br>不教你赚钱，只帮你少走弯路。</div>
+  <div>微信：nasanren</div>
+</div>
+
+<footer class="footer">
+  <span>渔夫9年餐饮 · 创业避坑工具站</span>
+  <span>数据来源：公开报道整理，仅供学习研究</span>
+</footer>
+
+</body>
+</html>
