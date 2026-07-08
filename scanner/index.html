@@ -6,159 +6,111 @@
     <title>加盟合同风险扫描器 V2 - 8年袁记加盟商真实踩坑总结</title>
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #14110e;
+            color: #f0e8d5;
+            line-height: 1.6;
             min-height: 100vh;
             padding: 20px;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-        }
+        a { color: #d4a040; text-decoration: none; }
+        a:hover { text-decoration: underline; }
 
-        .header {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-        }
+        .container { max-width: 900px; margin: 0 auto; }
 
-        .header h1 {
-            font-size: 32px;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
+        .header { text-align: center; color: #f0e8d5; margin-bottom: 30px; }
+        .header h1 { font-size: 32px; margin-bottom: 10px; font-weight: 700; color: #f0e8d5; }
+        .header p { font-size: 16px; color: #b8a888; }
         .version-badge {
             display: inline-block;
-            background: rgba(255,255,255,0.2);
+            background: rgba(212,160,64,0.15);
+            color: #d4a040;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 12px;
             margin-top: 8px;
+            border: 1px solid rgba(212,160,64,0.3);
         }
 
         .warning-banner {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+            background: rgba(212,160,64,0.08);
+            border-left: 4px solid #d4a040;
             padding: 15px 20px;
             margin-bottom: 20px;
             border-radius: 8px;
         }
-
-        .warning-banner p {
-            color: #856404;
-            font-size: 14px;
-            line-height: 1.6;
-        }
+        .warning-banner p { color: #d4a040; font-size: 14px; line-height: 1.6; }
 
         .input-section {
-            background: white;
+            background: #1e1a16;
+            border: 1px solid #302418;
             border-radius: 12px;
             padding: 30px;
             margin-bottom: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
-
-        .input-section h2 {
-            font-size: 20px;
-            color: #333;
-            margin-bottom: 15px;
-        }
+        .input-section h2 { font-size: 20px; color: #f0e8d5; margin-bottom: 15px; }
 
         .upload-section {
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
+            background: #252018;
+            border: 2px dashed #3d3529;
             border-radius: 8px;
             padding: 20px;
             text-align: center;
             margin-bottom: 20px;
             transition: all 0.3s;
         }
-
-        .upload-section:hover {
-            border-color: #667eea;
-            background: #f0f4ff;
-        }
-
-        .upload-section input[type="file"] {
-            display: none;
-        }
-
+        .upload-section:hover { border-color: #d4a040; background: #2a2520; }
+        .upload-section input[type="file"] { display: none; }
         .upload-btn {
-            background: #667eea;
-            color: white;
+            background: #d4a040;
+            color: #14110e;
             padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
             display: inline-block;
             margin-bottom: 10px;
-            font-weight: 500;
+            font-weight: 600;
         }
+        .upload-btn:hover { background: #c49030; }
+        .upload-tips { color: #8a7e6a; font-size: 13px; }
 
-        .upload-btn:hover {
-            background: #5a6fd6;
-        }
-
-        .upload-tips {
-            color: #6c757d;
-            font-size: 13px;
-        }
-
-        .preview-section {
-            margin-bottom: 15px;
-            display: none;
-        }
-
+        .preview-section { margin-bottom: 15px; display: none; }
         .preview-section img {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+            max-width: 100%; max-height: 300px;
+            border-radius: 8px; border: 1px solid #302418;
         }
 
         .ocr-status {
-            background: #e3f2fd;
-            color: #1976d2;
+            background: rgba(212,160,64,0.1);
+            color: #d4a040;
             padding: 10px 15px;
             border-radius: 6px;
             margin-bottom: 15px;
             display: none;
+            border: 1px solid rgba(212,160,64,0.2);
         }
 
         textarea {
-            width: 100%;
-            height: 300px;
-            padding: 15px;
-            border: 2px solid #e0e0e0;
+            width: 100%; height: 300px; padding: 15px;
+            background: #252018;
+            border: 2px solid #302418;
             border-radius: 8px;
-            font-size: 14px;
-            line-height: 1.8;
+            font-size: 14px; line-height: 1.8;
+            color: #f0e8d5;
             resize: vertical;
             font-family: inherit;
             transition: border-color 0.3s;
         }
-
-        textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
+        textarea:focus { outline: none; border-color: #d4a040; }
+        textarea::placeholder { color: #6b5f4d; }
 
         .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #d4a040;
+            color: #14110e;
             border: none;
             padding: 15px 40px;
             font-size: 16px;
@@ -168,312 +120,155 @@
             transition: transform 0.2s, box-shadow 0.2s;
             margin-top: 20px;
         }
-
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 5px 20px rgba(212,160,64,0.3);
         }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
         .btn-secondary {
-            background: white;
-            color: #667eea;
-            border: 2px solid #667eea;
+            background: transparent;
+            color: #d4a040;
+            border: 2px solid #d4a040;
             margin-left: 10px;
         }
-
-        .btn-secondary:hover {
-            background: #f8f9ff;
-        }
+        .btn-secondary:hover { background: rgba(212,160,64,0.1); }
 
         .results-section {
             display: none;
-            background: white;
+            background: #1e1a16;
+            border: 1px solid #302418;
             border-radius: 12px;
             padding: 30px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
         }
+        .results-section.show { display: block; }
 
-        .results-section.show {
-            display: block;
-        }
-
-        /* 风险评分仪表盘 */
         .score-card {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-            color: white;
+            background: linear-gradient(135deg, #1a1612 0%, #252018 100%);
+            border: 1px solid #302418;
+            color: #f0e8d5;
             padding: 30px;
             border-radius: 12px;
             margin-bottom: 25px;
             text-align: center;
         }
-
-        .score-number {
-            font-size: 72px;
-            font-weight: 800;
-            line-height: 1;
-        }
-
-        .score-label {
-            font-size: 18px;
-            margin-top: 10px;
-            opacity: 0.9;
-        }
-
-        .score-desc {
-            font-size: 14px;
-            margin-top: 15px;
-            opacity: 0.7;
-            max-width: 500px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .score-bar {
-            height: 8px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 4px;
-            margin-top: 20px;
-            overflow: hidden;
-        }
-
-        .score-bar-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: width 1s ease-out;
-        }
-
+        .score-number { font-size: 72px; font-weight: 800; line-height: 1; }
+        .score-label { font-size: 18px; margin-top: 10px; color: #d4a040; }
+        .score-desc { font-size: 14px; margin-top: 15px; color: #b8a888; max-width: 500px; margin-left: auto; margin-right: auto; }
+        .score-bar { height: 8px; background: rgba(255,255,255,0.08); border-radius: 4px; margin-top: 20px; overflow: hidden; }
+        .score-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease-out; }
         .score-danger { color: #ff4757; }
         .score-warning { color: #ffa502; }
         .score-safe { color: #2ed573; }
 
         .summary-card {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
+            background: linear-gradient(135deg, #2a2018 0%, #352820 100%);
+            border: 1px solid #3d3020;
+            color: #f0e8d5;
             padding: 25px;
             border-radius: 10px;
             margin-bottom: 25px;
         }
-
-        .summary-card h3 {
-            font-size: 18px;
-            margin-bottom: 15px;
-        }
-
-        .risk-stats {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-        }
-
-        .stat-item {
-            text-align: center;
-        }
-
-        .stat-number {
-            font-size: 36px;
-            font-weight: 700;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            opacity: 0.9;
-        }
-
-        .high-risk { color: #ffeb3b; }
-        .medium-risk { color: #ffcc80; }
-        .low-risk { color: #c8e6c9; }
+        .summary-card h3 { font-size: 18px; margin-bottom: 15px; color: #f0e8d5; }
+        .risk-stats { display: flex; gap: 20px; justify-content: center; }
+        .stat-item { text-align: center; }
+        .stat-number { font-size: 36px; font-weight: 700; }
+        .stat-label { font-size: 12px; color: #b8a888; }
+        .high-risk { color: #ff6b6b; }
+        .medium-risk { color: #ffa502; }
+        .low-risk { color: #2ed573; }
 
         .risk-category-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
+            font-size: 16px; font-weight: 600;
+            color: #d4a040;
             margin: 25px 0 15px 0;
             padding-bottom: 10px;
-            border-bottom: 2px solid #e0e0e0;
+            border-bottom: 2px solid #302418;
         }
 
         .risk-item {
-            border: 2px solid #e0e0e0;
+            border: 2px solid #302418;
             border-radius: 10px;
             padding: 20px;
             margin-bottom: 15px;
             transition: all 0.3s;
+            background: #1a1612;
         }
+        .risk-item:hover { box-shadow: 0 5px 20px rgba(0,0,0,0.3); }
+        .risk-item.high { border-color: #c0392b; background: rgba(192,57,43,0.08); }
+        .risk-item.medium { border-color: #d4a040; background: rgba(212,160,64,0.06); }
+        .risk-item.low { border-color: #27ae60; background: rgba(39,174,96,0.06); }
 
-        .risk-item:hover {
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
+        .risk-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .risk-name { font-size: 18px; font-weight: 600; color: #f0e8d5; }
+        .risk-badge { padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .risk-badge.high { background: #c0392b; color: #fff; }
+        .risk-badge.medium { background: #d4a040; color: #14110e; }
+        .risk-badge.low { background: #27ae60; color: #fff; }
 
-        .risk-item.high {
-            border-color: #f44336;
-            background: #ffebee;
-        }
-
-        .risk-item.medium {
-            border-color: #ff9800;
-            background: #fff3e0;
-        }
-
-        .risk-item.low {
-            border-color: #4caf50;
-            background: #e8f5e9;
-        }
-
-        .risk-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .risk-name {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .risk-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .risk-badge.high {
-            background: #f44336;
-            color: white;
-        }
-
-        .risk-badge.medium {
-            background: #ff9800;
-            color: white;
-        }
-
-        .risk-badge.low {
-            background: #4caf50;
-            color: white;
-        }
-
-        .risk-desc {
-            color: #666;
-            font-size: 14px;
-            line-height: 1.6;
-            margin-bottom: 10px;
-        }
+        .risk-desc { color: #b8a888; font-size: 14px; line-height: 1.6; margin-bottom: 10px; }
 
         .real-case {
-            background: rgba(0,0,0,0.05);
+            background: rgba(255,255,255,0.04);
             padding: 10px 15px;
             border-radius: 6px;
             margin-bottom: 10px;
             font-size: 13px;
-            color: #555;
+            color: #c4b896;
         }
-
-        .real-case strong {
-            color: #333;
-        }
+        .real-case strong { color: #d4a040; }
 
         .suggestion {
-            background: #e3f2fd;
+            background: rgba(212,160,64,0.08);
             padding: 10px 15px;
             border-radius: 6px;
             font-size: 13px;
-            color: #1565c0;
-            border-left: 3px solid #2196f3;
+            color: #d4a040;
+            border-left: 3px solid #d4a040;
         }
 
-        .keyword-match {
-            font-size: 12px;
-            color: #999;
-            margin-top: 8px;
-        }
+        .keyword-match { font-size: 12px; color: #8a7e6a; margin-top: 8px; }
+        .matched-text { background: rgba(212,160,64,0.2); color: #d4a040; padding: 2px 4px; border-radius: 3px; }
 
-        .matched-text {
-            background: #fff59d;
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
+        .no-results { text-align: center; padding: 40px; color: #b8a888; }
+        .no-results h3 { color: #2ed573; margin-bottom: 10px; }
 
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-
-        .no-results h3 {
-            color: #4caf50;
-            margin-bottom: 10px;
-        }
-
-        .footer {
-            text-align: center;
-            color: white;
-            padding: 30px;
-            font-size: 14px;
-            opacity: 0.8;
-        }
+        .footer { text-align: center; color: #8a7e6a; padding: 30px; font-size: 14px; }
 
         .disclaimer {
-            background: #fff;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #302418;
             border-radius: 8px;
             padding: 15px;
             margin-top: 20px;
             font-size: 12px;
-            color: #666;
-            border-left: 4px solid #999;
+            color: #8a7e6a;
+            border-left: 4px solid #6b5f4d;
         }
 
-        /* 缺失风险提醒 */
         .missing-risk-alert {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
+            background: rgba(212,160,64,0.06);
+            border-left: 4px solid #d4a040;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
         }
+        .missing-risk-alert h4 { color: #d4a040; margin-bottom: 8px; font-size: 14px; }
+        .missing-risk-alert p { color: #b8a888; font-size: 13px; line-height: 1.6; }
 
-        .missing-risk-alert h4 {
-            color: #856404;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .missing-risk-alert p {
-            color: #6c5c0e;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        /* 付费解锁提示 */
         .paywall-notice {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: linear-gradient(135deg, #2a2018 0%, #352820 100%);
+            border: 1px solid #d4a040;
+            color: #f0e8d5;
             padding: 20px;
             border-radius: 10px;
             text-align: center;
             margin-top: 20px;
         }
-
-        .paywall-notice h4 {
-            margin-bottom: 10px;
-        }
-
-        .paywall-notice p {
-            font-size: 13px;
-            opacity: 0.9;
-            margin-bottom: 15px;
-        }
-
+        .paywall-notice h4 { margin-bottom: 10px; color: #d4a040; }
+        .paywall-notice p { font-size: 13px; color: #b8a888; margin-bottom: 15px; }
         .btn-pay {
-            background: white;
-            color: #667eea;
+            background: #d4a040;
+            color: #14110e;
             border: none;
             padding: 12px 30px;
             font-weight: 600;
@@ -484,6 +279,12 @@
 </head>
 <body>
     <div class="container">
+        <nav style="display:flex;align-items:center;gap:16px;padding:12px 0;border-bottom:1px solid #302418;margin-bottom:24px;font-size:13px;">
+            <a href="../index.html" style="color:#f0e8d5;font-weight:700;font-size:15px;">渔夫9年餐饮</a>
+            <a href="../cases/" style="color:#d4a040;">案例库</a>
+            <a href="../calculator/" style="color:#d4a040;">盈亏计算器</a>
+            <a href="../articles/" style="color:#d4a040;">文章</a>
+        </nav>
         <div class="header">
             <h1>🐷 加盟合同风险扫描器</h1>
             <p>8年袁记加盟商真实踩坑总结 · 38个风险点智能识别</p>
@@ -603,14 +404,14 @@
                 const text = result.data.text;
                 document.getElementById('contractInput').value = text;
                 document.getElementById('ocrStatus').textContent = '✅ 识别完成！共识别 ' + text.length + ' 个字符，可点击下方按钮开始扫描';
-                document.getElementById('ocrStatus').style.background = '#d4edda';
-                document.getElementById('ocrStatus').style.color = '#155724';
+                document.getElementById('ocrStatus').style.background = 'rgba(39,174,96,0.15)';
+                document.getElementById('ocrStatus').style.color = '#2ed573';
 
             } catch (error) {
                 console.error('OCR识别失败:', error);
                 document.getElementById('ocrStatus').textContent = '❌ 识别失败，请重试或手动粘贴文本';
-                document.getElementById('ocrStatus').style.background = '#f8d7da';
-                document.getElementById('ocrStatus').style.color = '#721c24';
+                document.getElementById('ocrStatus').style.background = 'rgba(192,57,43,0.15)';
+                document.getElementById('ocrStatus').style.color = '#ff4757';
             }
         }
 
