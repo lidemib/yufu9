@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>加盟合同风险扫描器 V2 - 8年袁记加盟商真实踩坑总结</title>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .warning-banner {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .warning-banner p {
+            color: #856404;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .input-section h2 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .upload-section {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+        }
+
+        .upload-section:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .upload-section input[type="file"] {
+            display: none;
+        }
+
+        .upload-btn {
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .upload-btn:hover {
+            background: #5a6fd6;
+        }
+
+        .upload-tips {
+            color: #6c757d;
+            font-size: 13px;
+        }
+
+        .preview-section {
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .preview-section img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .ocr-status {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            line-height: 1.8;
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            margin-left: 10px;
+        }
+
+        .btn-secondary:hover {
+            background: #f8f9ff;
+        }
+
+        .results-section {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .results-section.show {
+            display: block;
+        }
+
+        /* 风险评分仪表盘 */
+        .score-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .score-number {
+            font-size: 72px;
+            font-weight: 800;
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 18px;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        .score-desc {
+            font-size: 14px;
+            margin-top: 15px;
+            opacity: 0.7;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .score-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        .score-bar-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 1s ease-out;
+        }
+
+        .score-danger { color: #ff4757; }
+        .score-warning { color: #ffa502; }
+        .score-safe { color: #2ed573; }
+
+        .summary-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+
+        .summary-card h3 {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .risk-stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .high-risk { color: #ffeb3b; }
+        .medium-risk { color: #ffcc80; }
+        .low-risk { color: #c8e6c9; }
+
+        .risk-category-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 25px 0 15px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .risk-item {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+
+        .risk-item:hover {
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .risk-item.high {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .risk-item.medium {
+            border-color: #ff9800;
+            background: #fff3e0;
+        }
+
+        .risk-item.low {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .risk-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .risk-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .risk-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .risk-badge.high {
+            background: #f44336;
+            color: white;
+        }
+
+        .risk-badge.medium {
+            background: #ff9800;
+            color: white;
+        }
+
+        .risk-badge.low {
+            background: #4caf50;
+            color: white;
+        }
+
+        .risk-desc {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .real-case {
+            background: rgba(0,0,0,0.05);
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .real-case strong {
+            color: #333;
+        }
+
+        .suggestion {
+            background: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #1565c0;
+            border-left: 3px solid #2196f3;
+        }
+
+        .keyword-match {
+            font-size: 12px;
+            color: #999;
+            margin-top: 8px;
+        }
+
+        .matched-text {
+            background: #fff59d;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .no-results h3 {
+            color: #4caf50;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .disclaimer {
+            background: #fff;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            border-left: 4px solid #999;
+        }
+
+        /* 缺失风险提醒 */
+        .missing-risk-alert {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .missing-risk-alert h4 {
+            color: #856404;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .missing-risk-alert p {
+            color: #6c5c0e;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        /* 付费解锁提示 */
+        .paywall-notice {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .paywall-notice h4 {
+            margin-bottom: 10px;
+        }
+
+        .paywall-notice p {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .btn-pay {
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 12px 30px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐷 加盟合同风险扫描器</h1>
+            <p>8年袁记加盟商真实踩坑总结 · 38个风险点智能识别</p>
+            <span class="version-badge">V2.0 新增风险评分</span>
+        </div>
+
+        <div class="warning-banner">
+            <p>⚠️ <strong>重要提示：</strong>本工具基于真实加盟踩坑经历制作，仅供参考，不构成法律意见。签署重要合同前请咨询专业律师。</p>
+        </div>
+
+        <div class="input-section">
+            <h2>📸 上传合同照片 / 截图</h2>
+            <div class="upload-section">
+                <input type="file" id="imageUpload" accept="image/*" onchange="handleImageUpload(event)">
+                <label for="imageUpload" class="upload-btn">📷 选择图片</label>
+                <div class="upload-tips">支持拍照上传或截图上传，自动识别文字后进行风险扫描</div>
+            </div>
+            <div class="preview-section" id="previewSection">
+                <img id="imagePreview" alt="图片预览">
+            </div>
+            <div class="ocr-status" id="ocrStatus">正在识别文字，请稍候...</div>
+
+            <h2>📋 粘贴合同文本</h2>
+            <textarea id="contractInput" placeholder="请把加盟合同文本粘贴到这里...
+（也可以只粘贴你关心的条款部分，建议至少粘贴核心条款）
+
+提示：粘贴越多，分析越准确！"></textarea>
+            <button class="btn" id="analyzeBtn" onclick="analyzeContract()">🔍 开始扫描风险</button>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <!-- 风险评分 -->
+            <div class="score-card" id="scoreCard">
+                <div class="score-number" id="totalScore">0</div>
+                <div class="score-label" id="scoreLabel">分</div>
+                <div class="score-desc" id="scoreDesc">合同安全指数（分数越低风险越高）</div>
+                <div class="score-bar">
+                    <div class="score-bar-fill" id="scoreBarFill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <h3>📊 扫描结果总览</h3>
+                <div class="risk-stats">
+                    <div class="stat-item">
+                        <div class="stat-number high-risk" id="highCount">0</div>
+                        <div class="stat-label">高危风险</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number medium-risk" id="mediumCount">0</div>
+                        <div class="stat-label">中危风险</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number low-risk" id="lowCount">0</div>
+                        <div class="stat-label">低危风险</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 缺失风险提醒 -->
+            <div id="missingRisksSection"></div>
+
+            <div id="riskResults"></div>
+
+            <!-- 付费解锁 -->
+            <div class="paywall-notice">
+                <h4>🚀 解锁AI智能解读完整版</h4>
+                <p>当前为基础关键词匹配模式。<br>付费19.9元解锁：AI深度解读整条条款、导出完整PDF报告、律师建议模板。</p>
+                <button class="btn-pay">💳 扫码付费解锁</button>
+            </div>
+
+            <div class="disclaimer">
+                <strong>免责声明：</strong>本工具基于8年餐饮加盟经验总结，覆盖常见加盟合同套路，但无法穷尽所有风险场景。分析结果仅供参考，不作为签署合同的唯一依据。加盟有风险，投资需谨慎。
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>—— 来自8年踩坑加盟商的血泪教训 ——</p>
+        </div>
+    </div>
+
+    <script>
+        // 图片上传和OCR文字识别功能
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            // 显示预览
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('imagePreview').src = e.target.result;
+                document.getElementById('previewSection').style.display = 'block';
+                document.getElementById('ocrStatus').style.display = 'block';
+                document.getElementById('ocrStatus').textContent = '正在识别文字，请稍候...（首次使用需要下载语言包，约10秒）';
+                
+                // 开始OCR识别
+                recognizeText(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function recognizeText(imageData) {
+            try {
+                const result = await Tesseract.recognize(
+                    imageData,
+                    'chi_sim', // 简体中文
+                    {
+                        logger: m => {
+                            if (m.status === 'recognizing text') {
+                                const progress = Math.round(m.progress * 100);
+                                document.getElementById('ocrStatus').textContent = `识别进度：${progress}%`;
+                            }
+                        }
+                    }
+                );
+
+                const text = result.data.text;
+                document.getElementById('contractInput').value = text;
+                document.getElementById('ocrStatus').textContent = '✅ 识别完成！共识别 ' + text.length + ' 个字符，可点击下方按钮开始扫描';
+                document.getElementById('ocrStatus').style.background = '#d4edda';
+                document.getElementById('ocrStatus').style.color = '#155724';
+
+            } catch (error) {
+                console.error('OCR识别失败:', error);
+                document.getElementById('ocrStatus').textContent = '❌ 识别失败，请重试或手动粘贴文本';
+                document.getElementById('ocrStatus').style.background = '#f8d7da';
+                document.getElementById('ocrStatus').style.color = '#721c24';
+            }
+        }
+
+        // 加盟合同风险条款库 - 来自8年袁记加盟商真实经历
+        // 风险等级：★★★ 高危 | ★★ 中危 | ★ 低危
+
+        const riskLibrary = {
+          // 一、费用相关
+          fee: {
+            title: "💰 费用相关风险",
+            items: [
+              {
+                id: "F001",
+                name: "加盟费无续约标准",
+                keywords: ["加盟费", "续约", "续签", "费用另行约定", "另行协商"],
+                riskLevel: "★★★",
+                scoreWeight: 15,
+                description: "合同不明确续约加盟费标准，品牌方随意涨价",
+                realCase: "袁记加盟费从12800→30000→50000→6000/年，毫无规律，加盟商完全被动",
+                suggestion: "务必在合同中明确续约加盟费上限，否则不签"
+              },
+              {
+                id: "F002",
+                name: "保证金先缴后退",
+                keywords: ["保证金", "押金", "先缴后退", "核实退还", "核实无误后退还"],
+                riskLevel: "★★★",
+                scoreWeight: 12,
+                description: "续约要求先缴新保证金+加盟费，核实后才退旧保证金",
+                realCase: "资金紧张时雪上加霜，\"核实完毕\"四个字能拖你一个月",
+                suggestion: "要求保证金直接抵扣，拒绝先缴后退"
+              },
+              {
+                id: "F003",
+                name: "隐形收费项",
+                keywords: ["管理费", "系统费", "账户管理费", "消杀费", "督导费", "服务费"],
+                riskLevel: "★★",
+                scoreWeight: 8,
+                description: "第一年合同没有的费用，续约时陆续加上",
+                realCase: "袁记先无管理费，后来加3600元/年督导费，系统费、消杀费陆续冒出来",
+                suggestion: "合同明确列出所有收费项，写清\"不得新增其他费用\""
+              },
+              {
+                id: "F004",
+                name: "开业审核拖延",
+                keywords: ["审核通过", "验收合格", "开业审批", "总部验收"],
+                riskLevel: "★★",
+                scoreWeight: 8,
+                description: "品牌方掌握开业审批权，拖延期间租金工资照付",
+                realCase: "培训6人，工资照发，门店租金照交，审核是他们，急的是你",
+                suggestion: "约定审核时限，超期可申请减免费用"
+              }
+            ]
+          },
+
+          // 二、区域保护
+          area: {
+            title: "📍 区域保护风险",
+            items: [
+              {
+                id: "A001",
+                name: "保护范围持续缩水",
+                keywords: ["区域保护", "商圈范围", "保护半径", "公里范围"],
+                riskLevel: "★★★",
+                scoreWeight: 15,
+                description: "每次续签合同，区域保护范围都在缩小",
+                realCase: "第一次签3公里保护，第二次缩到1公里，第三次可能只有500米",
+                suggestion: "坚持原范围不变，或明确缩小的补偿机制"
+              },
+              {
+                id: "A002",
+                name: "子品牌内卷",
+                keywords: ["子品牌", "姊妹品牌", "不同定位", "高端低端", "旗下品牌"],
+                riskLevel: "★★★",
+                scoreWeight: 15,
+                description: "品牌方用子品牌在你旁边开店，说是不同客群，实则抢生意",
+                realCase: "袁记开袁小饺在旁边，主打便宜，一个地方收两次加盟费",
+                suggestion: "合同写清\"集团旗下所有品牌均受区域保护限制\""
+              },
+              {
+                id: "A003",
+                name: "商场店例外条款",
+                keywords: ["商场店不受保护", "商业综合体例外", "同楼层不算", "购物中心除外"],
+                riskLevel: "★★",
+                scoreWeight: 10,
+                description: "商场店不在区域保护范围内，或者同楼层不算竞争",
+                realCase: "商场分成和入场费才是品牌方关心的，你的生意不是",
+                suggestion: "删除所有例外条款，要不就不签"
+              }
+            ]
+          },
+
+          // 三、供货与采购
+          supply: {
+            title: "📦 供货与采购风险",
+            items: [
+              {
+                id: "S001",
+                name: "全品类强制采购",
+                keywords: ["必须从总部购买", "不得外购", "外采罚款", "指定供应商", "统一采购"],
+                riskLevel: "★★★",
+                scoreWeight: 12,
+                description: "除了垃圾袋什么都要从总部买，外采罚款2000元",
+                realCase: "袁记全部必须总部购买，除了垃圾袋，发现外购物罚2000元",
+                suggestion: "争取核心原料强制，耗材允许自采，至少有比价权"
+              },
+              {
+                id: "S002",
+                name: "供货价只涨不跌",
+                keywords: ["供货价", "采购价", "统一价格", "价格调整", "甲方有权调整价格"],
+                riskLevel: "★★★",
+                scoreWeight: 15,
+                description: "市场原料下跌，总部供货价不降反升",
+                realCase: "精肉散卖8元一斤，卖给加盟商14.5元都不会降价",
+                suggestion: "约定供货价与市场价格联动机制，有上限"
+              },
+              {
+                id: "S003",
+                name: "新品强制下单",
+                keywords: ["新品推广", "强制下单", "必须进货", "试销", "新产品推广"],
+                riskLevel: "★★",
+                scoreWeight: 8,
+                description: "新品不管适不适合当地市场，必须进货，损耗自己扛",
+                realCase: "甘蓝羽衣干货一袋5公斤下单，最后销毁4.5公斤，南方人没人吃",
+                suggestion: "新品试销，卖不完可退可换"
+              },
+              {
+                id: "S004",
+                name: "运费不合理",
+                keywords: ["运费", "配送费", "物流费", "配送费用"],
+                riskLevel: "★★",
+                scoreWeight: 6,
+                description: "单店运费固定，不按距离远近调整",
+                realCase: "单店运费2500元/月，两店距离近的谈到1700元/月",
+                suggestion: "运费按距离或货值比例计算，不得一刀切"
+              },
+              {
+                id: "S005",
+                name: "退换货困难",
+                keywords: ["退货", "换货", "质量问题", "损耗承担", "不予退换"],
+                riskLevel: "★★",
+                scoreWeight: 8,
+                description: "说是能退货，各部门推托，最后小问题只能自己消化",
+                realCase: "拖字诀，现在觉得烦，不是很离谱就当自己损耗算了",
+                suggestion: "明确退换货时限和流程，超期自动同意"
+              }
+            ]
+          },
+
+          // 四、装修与设备
+          renovation: {
+            title: "🏗️ 装修与设备风险",
+            items: [
+              {
+                id: "R001",
+                name: "设计费强制收取",
+                keywords: ["设计费", "装修设计", "统一设计", "设计费用"],
+                riskLevel: "★★",
+                scoreWeight: 6,
+                description: "不管你找谁装修，设计费跑不掉",
+                realCase: "以前可以找外面装修，但8000元设计费你跑不掉",
+                suggestion: "设计费透明化，允许自审设计"
+              },
+              {
+                id: "R002",
+                name: "设备采购审批慢",
+                keywords: ["指定设备", "外购审批", "设备采购", "统一设备"],
+                riskLevel: "★",
+                scoreWeight: 4,
+                description: "允许外购设备，但审批流程煎熬",
+                realCase: "可以外购，不过等审批的时候很煎熬",
+                suggestion: "约定设备审批时限，3个工作日不答复视为同意"
+              },
+              {
+                id: "R003",
+                name: "频繁强制翻新",
+                keywords: ["装修升级", "形象升级", "版本升级", "3.0", "4.0", "SI升级"],
+                riskLevel: "★★★",
+                scoreWeight: 18,
+                description: "半年内从3.0升级到4.0，每次十几万，全部自己掏钱",
+                realCase: "第一店续签换3.0，第二店半年后换4.0，连加盟费13万，跟开新店一样",
+                suggestion: "装修升级周期不少于5年，费用品牌方承担至少一半"
+              }
+            ]
+          },
+
+          // 五、品牌与授权
+          brand: {
+            title: "🏷️ 品牌与授权风险",
+            items: [
+              {
+                id: "B001",
+                name: "产品范围限制",
+                keywords: ["只能卖指定产品", "不得售卖其他产品", "下架产品不得售卖", "经营范围"],
+                riskLevel: "★★",
+                scoreWeight: 8,
+                description: "哪怕以前有过的产品，公司下架了就不可以售卖，更不能卖自己的",
+                realCase: "生意好的产品公司说下架就得下架，你毫无办法",
+                suggestion: "保留当地畅销产品的售卖权"
+              },
+              {
+                id: "B002",
+                name: "品牌危机加盟商买单",
+                keywords: ["品牌形象", "公关危机", "食品安全", "负面事件", "品牌事故"],
+                riskLevel: "★★★",
+                scoreWeight: 12,
+                description: "总部出负面（食安事件等），公关像小学生，加盟店承受损失",
+                realCase: "蚯蚓事件对加盟商影响很大，公司公关简直小学生级别",
+                suggestion: "品牌危机期间应有加盟费减免或补贴"
+              },
+              {
+                id: "B003",
+                name: "最终解释权霸王条款",
+                keywords: ["最终解释权", "解释权归公司", "公司有权解释", "甲方享有解释权"],
+                riskLevel: "★★★",
+                scoreWeight: 20,
+                description: "所有争议品牌方一句话就能拍板，你没反驳余地",
+                realCase: "最终解释权归公司，就这么定",
+                suggestion: "删除这条，或者改为\"按合同约定执行，争议提交法院\""
+              }
+            ]
+          },
+
+          // 六、运营管控
+          operation: {
+            title: "⚙️ 运营管控风险",
+            items: [
+              {
+                id: "O001",
+                name: "定价双标",
+                keywords: ["统一定价", "指导价", "价格管控", "甲方制定价格"],
+                riskLevel: "★★",
+                scoreWeight: 8,
+                description: "同地区直营店比加盟店贵，直营店价格更灵活",
+                realCase: "同地区直营店比我加盟店贵一块钱，我自己亲自验证",
+                suggestion: "所有门店统一价，包括直营店，否则允许价格调整"
+              },
+              {
+                id: "O002",
+                name: "促销费用分摊",
+                keywords: ["促销活动", "满减", "打折", "费用承担", "活动费用"],
+                riskLevel: "★",
+                scoreWeight: 4,
+                description: "总部搞活动，费用谁承担没说清",
+                realCase: "以前有促销费用分摊问题，现在没有了",
+                suggestion: "活动前明确费用分摊比例，事后不得追加"
+              }
+            ]
+          },
+
+          // 七、合同期限与续约
+          contract: {
+            title: "📅 合同期限与续约风险",
+            items: [
+              {
+                id: "C001",
+                name: "续约优先权不明确",
+                keywords: ["优先续约权", "同等条件优先", "优先续约"],
+                riskLevel: "★★",
+                scoreWeight: 8,
+                description: "说是有优先权，但\"同等条件\"怎么定义？品牌方说了算",
+                realCase: "见过招商部同事搞错，加盟店和直营店隔壁同时开业",
+                suggestion: "明确优先权是绝对优先，不是\"同等条件\""
+              },
+              {
+                id: "C002",
+                name: "三年一签陷阱",
+                keywords: ["三年一签", "合同期限三年", "3年期限"],
+                riskLevel: "★★",
+                scoreWeight: 10,
+                description: "看似稳定，实则每三年收割一次加盟费+装修费",
+                realCase: "三年一签，每次续签都要涨加盟费+换装修，十几万没了",
+                suggestion: "争取五年一签，或约定续约加盟费封顶"
+              }
+            ]
+          },
+
+          // 八、违约与解约
+          termination: {
+            title: "⚠️ 违约与解约风险",
+            items: [
+              {
+                id: "T001",
+                name: "违约条款不对等",
+                keywords: ["影响公司形象", "自动解除合约", "没收押金", "追究责任", "乙方违约"],
+                riskLevel: "★★★",
+                scoreWeight: 18,
+                description: "你违约罚没押金+追责，总部违约啥事儿没有",
+                realCase: "处罚过多属于影响公司形象，自动解除合约，没收押金，还要追责",
+                suggestion: "违约条款双向对等，总部违约也要赔偿你的损失"
+              },
+              {
+                id: "T002",
+                name: "总部违约无追责机制",
+                keywords: ["供货断货", "支持不到位", "总部违约", "甲方违约"],
+                riskLevel: "★★★",
+                scoreWeight: 18,
+                description: "总部没履约你能怎样？解释权归公司，没有反驳余地",
+                realCase: "解释权归公司，没有反驳的余地",
+                suggestion: "总部违约可申请赔偿，连续3个月违约可无责解约"
+              },
+              {
+                id: "T003",
+                name: "单方面解约代价高",
+                keywords: ["放弃", "不得解约", "提前解约违约金", "不得提前终止"],
+                riskLevel: "★★",
+                scoreWeight: 12,
+                description: "你不能主动退，算放弃，啥都拿不回来",
+                realCase: "不可以，算放弃",
+                suggestion: "经营不善可提前3个月申请解约，退还部分保证金"
+              },
+              {
+                id: "T004",
+                name: "总部解约权太宽泛",
+                keywords: ["随时解除", "有权解除", "无需理由", "甲方可随时终止"],
+                riskLevel: "★★",
+                scoreWeight: 12,
+                description: "总部能随便踢你，条件不明确",
+                realCase: "没遇到过，但合同没写明白，遇到吃亏肯定是加盟商",
+                suggestion: "明确解约条件，不得随意解除合同"
+              }
+            ]
+          },
+
+          // 九、退出与善后
+          exit: {
+            title: "🚪 退出与善后风险",
+            items: [
+              {
+                id: "E001",
+                name: "库存不退",
+                keywords: ["库存不退", "剩余物料自行处理", "不得退货", "库存自行承担"],
+                riskLevel: "★★",
+                scoreWeight: 8,
+                description: "闭店时剩余食材物料自己处理，总部不收",
+                realCase: "库存不退",
+                suggestion: "未开封原料可按比例退给总部或转其他门店"
+              },
+              {
+                id: "E002",
+                name: "保证金与押金混淆",
+                keywords: ["保证金", "押金", "履约保证金"],
+                riskLevel: "★",
+                scoreWeight: 4,
+                description: "合同里保证金押金混着写，退出时说不清楚",
+                realCase: "保证金跟押金是同一回事",
+                suggestion: "明确金额、性质、退还条件和时限"
+              }
+            ]
+          },
+
+          // 十、争议解决
+          dispute: {
+            title: "⚖️ 争议解决风险",
+            items: [
+              {
+                id: "D001",
+                name: "管辖权在品牌方所在地",
+                keywords: ["甲方所在地法院", "品牌方所在地", "总部所在地管辖", "甲方所在地人民法院"],
+                riskLevel: "★★★",
+                scoreWeight: 20,
+                description: "打官司得去品牌方总部所在地，路费住宿费时间成本拖死你",
+                realCase: "这是加盟合同最常见的套路，真出事你耗不起",
+                suggestion: "争取改为\"合同履行地法院管辖\"，也就是你开店的地方"
+              },
+              {
+                id: "D002",
+                name: "强制仲裁",
+                keywords: ["提交仲裁委员会", "仲裁解决", "由XX仲裁委员会仲裁"],
+                riskLevel: "★★",
+                scoreWeight: 12,
+                description: "仲裁一裁终局，费用高，很难翻盘",
+                realCase: "仲裁费起步就几千，而且不能上诉",
+                suggestion: "优先选法院诉讼，不要仲裁"
+              }
+            ]
+          }
+        };
+
+        // 应该有但可能没写的重要条款（反向检测）
+        const missingRisksCheck = [
+          {
+            name: "未约定加盟费封顶机制",
+            keywords: ["加盟费", "续约费", "续签费用"],
+            checkAbsence: ["不超过", "上限", "封顶", "最高"],
+            riskLevel: "★★",
+            description: "合同提到了加盟费/续约费用，但没有约定费用上限，品牌方可能随意涨价",
+            suggestion: "补充约定\"续约加盟费不得超过首次加盟费的120%\""
+          },
+          {
+            name: "未约定总部违约责任",
+            keywords: ["违约", "责任", "违约金"],
+            checkAbsence: ["甲方违约", "总部违约", "甲方责任"],
+            riskLevel: "★★★",
+            description: "只写了乙方（你）的违约责任，没写甲方（总部）的违约责任，权利不对等",
+            suggestion: "要求补充总部违约条款，比如断货、培训不到位等赔偿机制"
+          },
+          {
+            name: "未明确保证金退还时限",
+            keywords: ["保证金", "押金"],
+            checkAbsence: ["工作日内退还", "日内退还", "15日内", "30日内"],
+            riskLevel: "★★",
+            description: "提到了保证金/押金，但没说多久能退回来，到时候可能无限期拖",
+            suggestion: "明确约定\"合同终止后15个工作日内无息退还保证金\""
+          },
+          {
+            name: "未约定不可抗力条款",
+            keywords: ["疫情", "封控", "不可抗力", "天灾"],
+            checkAbsence: ["不可抗力", "情势变更", "疫情", "天灾"],
+            riskLevel: "★★",
+            description: "没考虑疫情、天灾等特殊情况，遇到不可抗力时加盟费能不能减免、合同能不能顺延",
+            suggestion: "增加不可抗力条款，约定疫情等特殊情况可减免加盟费或顺延合同"
+          }
+        ];
+
+        // 所有风险汇总
+        function getAllRisks() {
+          let all = [];
+          for (let category in riskLibrary) {
+            all = all.concat(riskLibrary[category].items);
+          }
+          return all;
+        }
+
+        const allRisks = getAllRisks();
+
+        // 计算总分（满分100，分数越低风险越高）
+        function calculateScore(matchedRisks) {
+          let totalRiskWeight = 0;
+          matchedRisks.forEach(risk => {
+            totalRiskWeight += risk.scoreWeight;
+          });
+
+          // 基础分100，减去风险权重
+          let score = 100 - totalRiskWeight;
+          if (score < 0) score = 0;
+          if (score > 100) score = 100;
+
+          return Math.round(score);
+        }
+
+        // 获取分数等级描述
+        function getScoreLevel(score) {
+          if (score >= 80) {
+            return { label: "相对安全", color: "score-safe", barColor: "#2ed573", desc: "整体风险可控，但仍需注意细节条款" };
+          } else if (score >= 60) {
+            return { label: "中等风险", color: "score-warning", barColor: "#ffa502", desc: "存在多处风险点，建议逐条协商修改" };
+          } else {
+            return { label: "高风险合同", color: "score-danger", barColor: "#ff4757", desc: "风险极高，多处霸王条款，不建议直接签署" };
+          }
+        }
+
+        function analyzeContract() {
+            const contractText = document.getElementById('contractInput').value;
+            const btn = document.getElementById('analyzeBtn');
+            
+            if (!contractText.trim()) {
+                alert('请先粘贴合同文本');
+                return;
+            }
+
+            if (contractText.length < 50) {
+                alert('合同文本太短，建议至少粘贴核心条款（费用、区域、供货、违约等）');
+                return;
+            }
+
+            // 加载状态
+            btn.disabled = true;
+            btn.textContent = '🔍 正在分析中...';
+
+            // 模拟分析延迟，增加真实感
+            setTimeout(() => {
+                doAnalysis(contractText);
+                btn.disabled = false;
+                btn.textContent = '🔍 开始扫描风险';
+            }, 1200);
+        }
+
+        function doAnalysis(contractText) {
+            const text = contractText;
+            const matchedRisksByCategory = {};
+
+            // 按分类匹配每个风险条款
+            for (let category in riskLibrary) {
+                matchedRisksByCategory[category] = [];
+                
+                riskLibrary[category].items.forEach(risk => {
+                    const matchedKeywords = [];
+                    
+                    risk.keywords.forEach(keyword => {
+                        if (text.includes(keyword)) {
+                            matchedKeywords.push(keyword);
+                        }
+                    });
+
+                    if (matchedKeywords.length > 0) {
+                        matchedRisksByCategory[category].push({
+                            ...risk,
+                            matchedKeywords
+                        });
+                    }
+                });
+            }
+
+            // 检测"应该有但没有的条款"
+            const detectedMissingRisks = [];
+            missingRisksCheck.forEach(check => {
+                // 检查是否有关键词，但缺少保护性词汇
+                let hasKeyword = check.keywords.some(kw => text.includes(kw));
+                let hasProtection = check.checkAbsence.some(kw => text.includes(kw));
+                
+                if (hasKeyword && !hasProtection) {
+                    detectedMissingRisks.push(check);
+                }
+            });
+
+            // 汇总所有匹配到的风险用于计算分数
+            const allMatchedRisks = [];
+            for (let category in matchedRisksByCategory) {
+                allMatchedRisks.push(...matchedRisksByCategory[category]);
+            }
+
+            // 计算分数
+            const score = calculateScore(allMatchedRisks);
+            const scoreLevel = getScoreLevel(score);
+
+            // 显示结果
+            displayResults(score, scoreLevel, matchedRisksByCategory, detectedMissingRisks);
+        }
+
+        function displayResults(score, scoreLevel, matchedRisksByCategory, detectedMissingRisks) {
+            const resultsSection = document.getElementById('resultsSection');
+            
+            // 更新分数显示
+            document.getElementById('totalScore').textContent = score;
+            document.getElementById('totalScore').className = 'score-number ' + scoreLevel.color;
+            document.getElementById('scoreLabel').textContent = scoreLevel.label;
+            document.getElementById('scoreDesc').textContent = scoreLevel.desc;
+            document.getElementById('scoreBarFill').style.width = score + '%';
+            document.getElementById('scoreBarFill').style.background = scoreLevel.barColor;
+
+            // 统计各类风险数量
+            let highCount = 0, mediumCount = 0, lowCount = 0;
+            for (let category in matchedRisksByCategory) {
+                matchedRisksByCategory[category].forEach(risk => {
+                    if (risk.riskLevel === '★★★') highCount++;
+                    else if (risk.riskLevel === '★★') mediumCount++;
+                    else lowCount++;
+                });
+            }
+
+            document.getElementById('highCount').textContent = highCount;
+            document.getElementById('mediumCount').textContent = mediumCount;
+            document.getElementById('lowCount').textContent = lowCount;
+
+            // 显示缺失风险提醒
+            const missingSection = document.getElementById('missingRisksSection');
+            if (detectedMissingRisks.length > 0) {
+                let missingHtml = '';
+                detectedMissingRisks.forEach(risk => {
+                    missingHtml += `
+                        <div class="missing-risk-alert">
+                            <h4>⚠️ ${risk.name}（${risk.riskLevel}）</h4>
+                            <p>${risk.description}</p>
+                            <p><strong>建议：</strong>${risk.suggestion}</p>
+                        </div>
+                    `;
+                });
+                missingSection.innerHTML = `<div class="risk-category-title">🔍 检测到潜在缺失条款</div>` + missingHtml;
+            } else {
+                missingSection.innerHTML = '';
+            }
+
+            // 按分类显示风险项目
+            let riskResultsHtml = '';
+            for (let category in matchedRisksByCategory) {
+                const risks = matchedRisksByCategory[category];
+                if (risks.length > 0) {
+                    riskResultsHtml += `<div class="risk-category-title">${riskLibrary[category].title}（${risks.length}项）</div>`;
+                    
+                    risks.forEach(risk => {
+                        const levelClass = risk.riskLevel === '★★★' ? 'high' : 
+                                          risk.riskLevel === '★★' ? 'medium' : 'low';
+                        
+                        riskResultsHtml += `
+                            <div class="risk-item ${levelClass}">
+                                <div class="risk-header">
+                                    <div class="risk-name">${risk.name}</div>
+                                    <div class="risk-badge ${levelClass}">${risk.riskLevel}</div>
+                                </div>
+                                <p class="risk-desc">${risk.description}</p>
+                                <div class="real-case">
+                                    <strong>💡 真实踩坑：</strong>${risk.realCase}
+                                </div>
+                                <div class="suggestion">
+                                    <strong>✅ 建议：</strong>${risk.suggestion}
+                                </div>
+                                <p class="keyword-match">
+                                    匹配关键词：${risk.matchedKeywords.map(k => `<span class="matched-text">${k}</span>`).join(' ')}
+                                </p>
+                            </div>
+                        `;
+                    });
+                }
+            }
+
+            if (highCount + mediumCount + lowCount === 0) {
+                riskResultsHtml = `
+                    <div class="no-results">
+                        <h3>🎉 未检测到明显风险关键词</h3>
+                        <p>但请不要放松警惕！好的合同不一定没有风险，只是没有触发我们的关键词。</p>
+                        <p>建议找专业律师逐条审阅，特别是加盟费、区域保护、供货、解约这几个核心条款。</p>
+                    </div>
+                `;
+            }
+
+            document.getElementById('riskResults').innerHTML = riskResultsHtml;
+
+            resultsSection.classList.add('show');
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // 支持回车触发（Ctrl+Enter）
+        document.getElementById('contractInput').addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'Enter') {
+                analyzeContract();
+            }
+        });
+    </script>
+</body>
+</html>
