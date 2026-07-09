@@ -291,7 +291,7 @@ input[type="range"]::-moz-range-thumb{
 
     <!-- 4. 食材成本占比 -->
     <div class="input-group">
-      <div class="input-label"><span>食材成本占比（%）</span><span class="val" id="v_food">35</span></div>
+      <div class="input-label"><span>毛利率（%）</span><span class="val" id="v_food">65</span></div>
       <div class="input-row">
         <input type="number" id="n_food" value="35" min="0" max="80" step="1">
       </div>
@@ -366,6 +366,10 @@ input[type="range"]::-moz-range-thumb{
         <div class="result-item">
           <div class="r-label">月营收</div>
           <div class="r-value r-neutral" id="o_revenue">-</div>
+        </div>
+        <div class="result-item">
+          <div class="r-label">日均收入</div>
+          <div class="r-value r-neutral" id="o_daily_revenue">-</div>
         </div>
         <div class="result-item">
           <div class="r-label">月食材成本</div>
@@ -443,7 +447,7 @@ input[type="range"]::-moz-range-thumb{
     {key:'rent',   def:8000,   min:0, max:100000,  step:500},
     {key:'staff',  def:5,      min:0, max:50,      step:1},
     {key:'salary', def:4500,   min:0, max:30000,   step:100},
-    {key:'food',   def:35,     min:0, max:80,      step:1},
+    {key:'food',   def:65,     min:0, max:90,      step:1},
     {key:'utility',def:3000,   min:0, max:50000,   step:100},
     {key:'other',  def:2000,   min:0, max:50000,   step:100},
     {key:'price',  def:25,     min:0, max:500,     step:1},
@@ -493,7 +497,8 @@ input[type="range"]::-moz-range-thumb{
     const rent    = gv('rent');
     const staff   = gv('staff');
     const salary  = gv('salary');
-    const foodPct = gv('food') / 100;
+    const grossMargin = gv('food') / 100;
+    const foodPct = 1 - grossMargin;
     const utility = gv('utility');
     const other   = gv('other');
     const price   = gv('price');
@@ -540,6 +545,8 @@ input[type="range"]::-moz-range-thumb{
 
     // Display results
     document.getElementById('o_revenue').textContent = fmt(revenue);
+    const dailyRev = days > 0 ? revenue / days : 0;
+    document.getElementById('o_daily_revenue').textContent = fmt(dailyRev) + '元';
     document.getElementById('o_food_cost').textContent = fmt(foodCost);
     document.getElementById('o_labor').textContent = fmt(labor);
     document.getElementById('o_total_cost').textContent = fmt(totalCost);
@@ -584,8 +591,8 @@ input[type="range"]::-moz-range-thumb{
       items.push({type:'danger', icon:'⚠️', text:'这个模型是亏钱的，建议重新评估选址或商业模式'});
     }
 
-    if(foodPct > 0.4){
-      items.push({type:'warn', icon:'📦', text:'食材成本偏高，建议优化供应链或调整菜品结构'});
+    if(grossMargin < 0.55){
+      items.push({type:'warn', icon:'📦', text:'毛利率偏低，建议优化供应链或调整菜品定价'});
     }
 
     if(revenue > 0 && labor / revenue > 0.3){
