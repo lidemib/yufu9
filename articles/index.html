@@ -30,6 +30,9 @@ a{color:#d4a040;text-decoration:none}a:hover{text-decoration:underline}
 .cta a:hover{background:#e8b84a;text-decoration:none}
 .footer{max-width:800px;margin:0 auto;padding:20px;border-top:1px solid #302418;text-align:center;font-size:12px;color:#6b5f4f}
 @media(max-width:640px){.hero{padding:30px 16px 20px}.articles{padding:0 16px 40px}}
+.article-body{margin-top:16px;padding-top:16px;border-top:1px solid #302418;font-size:14px;line-height:1.9;color:#b8a888}
+.article-body p{margin-bottom:12px}
+.article-body strong{color:#f0e8d5}
 </style>
 </head>
 <body>
@@ -37,7 +40,7 @@ a{color:#d4a040;text-decoration:none}a:hover{text-decoration:underline}
 <header class="header">
   <span class="logo"><a href="../">🐷 渔夫9年餐饮</a></span>
   <nav>
-    <a href="../">首页</a>
+    <a href="https://lidemib.github.io/yufu9/">首页</a>
     <a href="../cases/">案例库</a>
     <a href="../scanner/">合同扫描</a>
     <a href="../calculator/">盈亏计算</a>
@@ -54,29 +57,65 @@ a{color:#d4a040;text-decoration:none}a:hover{text-decoration:underline}
 
   <div class="section-label">🔥 精选文章</div>
 
-  <a href="https://lidemib.github.io/my-first-site/" class="article-card">
-    <h3>我开了9年袁记，见过200多家加盟店倒闭</h3>
+  <div class="article-card" onclick="toggleArticle(0)" style="cursor:pointer">
+    <h3>我开了9年餐饮，见过200多家加盟店倒闭</h3>
     <p>2026年加盟的坑，比你想得还深。直接给你看真实的加盟数据，以及快招公司是怎么收割你的。</p>
-    <div class="meta"><span class="tag">深度分析</span> 2026年6月 · 加盟避坑</div>
-  </a>
+    <div class="meta"><span class="tag">深度分析</span> 2026年6月 · 加盟避坑 <span style="color:#d4a040;margin-left:8px">点击展开 ▼</span></div>
+    <div class="article-body" id="article-0" style="display:none">
+      <p>9年了。从2017年到现在，我亲眼看着至少200多家加盟店从开业到关门。</p>
+      <p>说几个你可能不想听的事实：</p>
+      <p><strong>第一，90%的加盟品牌活不过3年。</strong>你看到的那些排队拍照的网红店，大部分在第二年就开始走下坡路。不是产品不好，是流量红利过了，消费者腻了。</p>
+      <p><strong>第二，快招公司才是最大的坑。</strong>他们不靠开店赚钱，靠收加盟费赚钱。你交了几十万，他给你一套模板、一个供应链、一个"品牌"。这个品牌可能同时有50个名字，背后是同一家公司。</p>
+      <p><strong>第三，合同里藏着魔鬼。</strong>供应链绑定、区域保护缺失、退出机制模糊……我见过太多人签完合同才发现，自己根本没有议价权。</p>
+      <p>如果你正在考虑加盟，先做一个合同风险扫描。我自己做了一个工具，41个风险点逐一排查，免费用。</p>
+    </div>
+  </div>
 
-  <a href="https://lidemib.github.io/my-first-site/" class="article-card">
-    <h3>八年餐饮路，我为什么选择袁记云饺</h3>
-    <p>2018年考察了很多项目，最后选袁记不是因为它看起来最赚钱，而是模式简单、标准化、供应链稳定。</p>
-    <div class="meta"><span class="tag">创业随笔</span> 2026年5月 · 餐饮经验</div>
-  </a>
+  <div class="article-card" onclick="toggleArticle(1)" style="cursor:pointer">
+    <h3>八年餐饮路，我为什么选择继续做下去</h3>
+    <p>2018年考察了很多项目，最后选了这个赛道不是因为它看起来最赚钱，而是模式简单、标准化、供应链稳定。</p>
+    <div class="meta"><span class="tag">创业随笔</span> 2026年5月 · 餐饮经验 <span style="color:#d4a040;margin-left:8px">点击展开 ▼</span></div>
+    <div class="article-body" id="article-1" style="display:none">
+      <p>很多人问我，9年餐饮路累不累？说实话，累。但我不后悔。</p>
+      <p>2018年入行的时候，我考察了很多项目。奶茶、咖啡、烧烤、小吃……最后选了一个看起来"不性感"的赛道。</p>
+      <p>为什么？因为三个原因：</p>
+      <p><strong>1. 刚需高频。</strong>人每天都要吃饭，不是偶尔消费。这意味着只要味道过得去，就有复购。</p>
+      <p><strong>2. 标准化程度高。</strong>不需要你是大厨，按SOP操作就行。这对连锁化至关重要。</p>
+      <p><strong>3. 供应链成熟。</strong>核心原料由总部统一配送，品质可控，成本可预期。</p>
+      <p>9年下来，我最大的感悟是：餐饮不是暴利行业，是勤行。赚的是辛苦钱，但只要你算清楚账、控制好成本，稳扎稳打是能活下来的。</p>
+    </div>
+  </div>
 
-  <a href="https://lidemib.github.io/my-first-site/" class="article-card">
+  <div class="article-card" onclick="toggleArticle(2)" style="cursor:pointer">
     <h3>关于预制菜，我想说句实话</h3>
     <p>现在的连锁餐饮几乎没有不用预制菜的。真正的问题不在于用不用，而在于用得好不好、有没有告诉消费者。</p>
-    <div class="meta"><span class="tag">行业观察</span> 2026年3月 · 预制菜</div>
-  </a>
+    <div class="meta"><span class="tag">行业观察</span> 2026年3月 · 预制菜 <span style="color:#d4a040;margin-left:8px">点击展开 ▼</span></div>
+    <div class="article-body" id="article-2" style="display:none">
+      <p>先亮个态度：预制菜本身不是原罪。</p>
+      <p>你去麦当劳、肯德基，他们的薯条、鸡块全是预制的。为什么没人骂？因为人家好吃，而且价格匹配。</p>
+      <p>问题出在哪？<strong>出在用预制菜卖现炒菜的价格。</strong></p>
+      <p>一份酸菜鱼，你用预制料理包加热3分钟端上来，卖我68块。告诉我这是"大厨现做"——这不叫餐饮，叫诈骗。</p>
+      <p>2026年预制菜国标终于落地了。核心要求就两条：</p>
+      <p>1. <strong>必须公示</strong>：用了预制菜必须告诉消费者</p>
+      <p>2. <strong>不能添加防腐剂</strong>：冷冻保存可以，但不能靠化学保鲜</p>
+      <p>作为开了9年餐饮的人，我的看法是：预制菜会成为趋势，但前提是透明。你用了就告诉我，价格对应调整，消费者能接受。</p>
+    </div>
+  </div>
 
-  <a href="https://lidemib.github.io/my-first-site/" class="article-card">
+  <div class="article-card" onclick="toggleArticle(3)" style="cursor:pointer">
     <h3>给想开餐饮店的朋友几个建议</h3>
     <p>先问自己三个问题：能接受每天工作12小时吗？能接受全年无休吗？能接受投入几十万可能亏损吗？</p>
-    <div class="meta"><span class="tag">开店指南</span> 2026年2月 · 新手建议</div>
-  </a>
+    <div class="meta"><span class="tag">开店指南</span> 2026年2月 · 新手建议 <span style="color:#d4a040;margin-left:8px">点击展开 ▼</span></div>
+    <div class="article-body" id="article-3" style="display:none">
+      <p>如果你认真回答了上面三个问题，还是想开，那看下面这几条：</p>
+      <p><strong>1. 先算账，再选址。</strong>很多人先找铺面再算能赚多少。错了。你应该先算：每月固定成本多少？盈亏平衡日均多少客流？这个客流在你选的铺子能不能达到？</p>
+      <p><strong>2. 别碰你不懂的品类。</strong>你不会炒菜就别开炒菜馆。你不会烘焙就别开面包店。先从你熟悉的品类切入。</p>
+      <p><strong>3. 装修别超预算的30%。</strong>见过太多人把几十万全砸在装修上，开业第一天就现金流断裂。装修是面子，现金流是命。</p>
+      <p><strong>4. 前3个月别看利润。</strong>新店有养店期，前3个月亏是正常的。但你要控制亏损在可承受范围内，不能靠借钱撑。</p>
+      <p><strong>5. 永远留3个月运营资金。</strong>除了开店投入，你手里必须有至少3个月的房租+人工+原料钱，作为安全垫。</p>
+      <p>最后说一句：餐饮不是不能做，但真的不是谁都能做。入行之前，多做功课，少交学费。</p>
+    </div>
+  </div>
 
   <div class="section-label">📚 公众号「渔夫9年餐饮」</div>
 
@@ -116,5 +155,17 @@ a{color:#d4a040;text-decoration:none}a:hover{text-decoration:underline}
   微信：nasanren
 </footer>
 
+<script>
+function toggleArticle(idx){
+  const el = document.getElementById('article-'+idx);
+  if(el.style.display === 'none'){
+    el.style.display = 'block';
+    el.parentElement.querySelector('.meta span:last-child').textContent = '点击收起 ▲';
+  } else {
+    el.style.display = 'none';
+    el.parentElement.querySelector('.meta span:last-child').textContent = '点击展开 ▼';
+  }
+}
+</script>
 </body>
 </html>
