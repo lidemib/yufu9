@@ -245,6 +245,26 @@ a:hover { color: #e8b84a; text-decoration: underline; }
   text-decoration: none;
 }
 
+/* QR Code */
+.qrcode-container {
+  margin-top: 20px;
+}
+.qrcode-img {
+  max-width: 200px;
+  width: 100%;
+  height: auto;
+  border: 2px solid #d4a040;
+  border-radius: 12px;
+  background: #fff;
+  padding: 8px;
+}
+.qrcode-tip {
+  margin-top: 12px;
+  color: #d4a040;
+  font-size: 14px;
+  font-weight: 600;
+}
+
 /* Signature */
 .signature {
   max-width: 960px;
@@ -369,7 +389,10 @@ a:hover { color: #e8b84a; text-decoration: underline; }
   <div class="cta-card">
     <h2>关注公众号「渔夫9年餐饮」</h2>
     <p>每周更新餐饮加盟避坑干货，真实案例拆解，行业热点分析。<br>比你身边任何一个「过来人」都实在。</p>
-    <a href="https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzkwNTI3MjE0Mw==" class="cta-btn">关注公众号</a>
+    <div class="qrcode-container">
+      <img src="qrcode.jpg" alt="扫码关注公众号" class="qrcode-img">
+      <p class="qrcode-tip">微信扫码关注「渔夫9年餐饮」</p>
+    </div>
   </div>
 </section>
 
